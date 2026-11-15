@@ -12,7 +12,11 @@
     <string name="capture_background_help">Recording uses a foreground service with a Stop action in its notification. Android or battery restrictions may interrupt reception with the screen off. An interrupted app never resumes automatically.</string>
     <string name="capture_step_find">1 · Find and select a tag</string>
     <string name="capture_filter_help">BLE scan results only. Filters recognise candidates from advertisement bytes; a cached Android name does not confirm a name-encoded tag.</string>
-    <string name="capture_query_hint">Name or address</string>
+    <string name="capture_query_hint">Name, radio address or OVT identity</string>
+    <string name="capture_filter_test_beacon">OpenVespaTrack test beacons</string>
+    <string name="capture_test_beacon_help">On another phone, start Test beacon. Tap Find devices here, then compare the OVT identity and measured RSSI. Recognition uses received service data, including beacons from preview 0.4.0-rc.2. A cached name alone is not a match.</string>
+    <string name="capture_test_beacon_detected">\nOpenVespaTrack test beacon · service-data identity</string>
+    <string name="capture_test_beacon_sample">\nDecoded test beacon identity: %1$s\nThis display label is derived from the original service data; the scan bytes remain unchanged.</string>
     <string name="capture_find_devices">Find devices</string>
     <string name="capture_stop_search">Stop search</string>
     <string name="capture_bluetooth">Bluetooth</string>

@@ -41,6 +41,8 @@ Protocol vectors establish encoder/decoder consistency. Dry-runs exercise softwa
 
 Use the procedure in [hardware validation](HARDWARE.md). In particular, verify continuous beacon reception past two hours, screen off, notification Stop, radio conflicts and interruption recovery with a second receiver. API 29/30 recording behaviour and recent Android behaviour need separate device observations.
 
+Test discovery of both rc.2 and the current transmitter on a second BLE Lab device. Confirm the matching `OVT-` identity and measured RSSI, then verify that fresh observations cease after Stop. Check the primary Service Data in an independent scanner and the UUID list in its active scan response.
+
 For experimental name/manufacturer profiles, compare exact received bytes and saved run evidence. A receiver restricted to those formats will not automatically recognize the standalone custom beacon.
 
 ## Companion protocol cross-check

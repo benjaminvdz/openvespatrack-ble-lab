@@ -1,6 +1,7 @@
 package org.anthrobios.vespasim.ui
 
 import org.anthrobios.vespasim.core.capture.CaptureObservation
+import org.anthrobios.vespasim.core.beacon.BeaconIdentity
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -31,6 +32,26 @@ class CaptureUiLogicTest {
         assertNull(CaptureUiLogic.selection(nano.address, listOf(nano), CaptureUiLogic.Filter.NANO, "does-not-match", 1001))
         assertNull(CaptureUiLogic.selection(nano.address, emptyList(), CaptureUiLogic.Filter.NANO, "", 1001))
         assertNull(CaptureUiLogic.selection(null, listOf(nano), CaptureUiLogic.Filter.NANO, "", 1001))
+    }
+    @Test fun testBeaconFilterUsesDecodedServiceIdentityAndKeepsNanoDefaultUnchanged() {
+        val beacon = other.copy(cachedName = null, fc65 = false, testBeacon = BeaconIdentity("0123456789abcdef"))
+        assertTrue(CaptureUiLogic.visible(beacon, CaptureUiLogic.Filter.TEST_BEACON, ""))
+        assertTrue(CaptureUiLogic.visible(beacon, CaptureUiLogic.Filter.ALL, ""))
+        assertFalse(CaptureUiLogic.visible(beacon, CaptureUiLogic.Filter.NANO, ""))
+        assertFalse(CaptureUiLogic.visible(nano, CaptureUiLogic.Filter.TEST_BEACON, ""))
+        assertFalse(CaptureUiLogic.visible(other.copy(cachedName = "OVT-0123456789ABCDEF"), CaptureUiLogic.Filter.TEST_BEACON, ""))
+        assertEquals(listOf(CaptureUiLogic.Filter.NANO, CaptureUiLogic.Filter.VESPA, CaptureUiLogic.Filter.FC65, CaptureUiLogic.Filter.ALL),
+            CaptureUiLogic.Filter.entries.take(4))
+    }
+    @Test fun testBeaconSearchAcceptsDisplayedLabelOrIdentityBytesAndExpiresSelection() {
+        val beacon = other.copy(cachedName = null, fc65 = false, testBeacon = BeaconIdentity("0123456789abcdef"))
+        assertTrue(CaptureUiLogic.visible(beacon, CaptureUiLogic.Filter.TEST_BEACON, " ovt-0123456789ABCDEF "))
+        assertTrue(CaptureUiLogic.visible(beacon, CaptureUiLogic.Filter.TEST_BEACON, "89abcdef"))
+        assertFalse(CaptureUiLogic.visible(beacon, CaptureUiLogic.Filter.TEST_BEACON, "OVT-0000"))
+        assertEquals(beacon.address, CaptureUiLogic.selection(beacon.address, listOf(beacon), CaptureUiLogic.Filter.TEST_BEACON, "OVT-", 11_000))
+        assertNull(CaptureUiLogic.selection(beacon.address, listOf(beacon), CaptureUiLogic.Filter.TEST_BEACON, "OVT-", 11_001))
+        assertNull(CaptureUiLogic.selection(beacon.address, listOf(beacon), CaptureUiLogic.Filter.TEST_BEACON, "OVT-", 999))
+        assertNull(CaptureUiLogic.selection(beacon.address, listOf(beacon.copy(testBeacon = null)), CaptureUiLogic.Filter.TEST_BEACON, "", 1001))
     }
     private fun observation(sequence: Long, ms: Long, rssi: Int = -65) = CaptureObservation(sequence, 1_700_000_000_000 + ms,
         ms * 1_000_000, "01:02:03:04:05:06", rssi, "020106")

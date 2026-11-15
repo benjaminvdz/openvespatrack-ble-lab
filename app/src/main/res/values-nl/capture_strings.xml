@@ -12,7 +12,11 @@
     <string name="capture_background_help">De opname gebruikt een foreground-service met Stop in de melding. Android of energiebesparing kan ontvangst bij een uitgeschakeld scherm onderbreken. Een onderbroken app hervat nooit vanzelf.</string>
     <string name="capture_step_find">1 · Zoek en kies een tag</string>
     <string name="capture_filter_help">Alleen BLE-scanresultaten. Filters herkennen kandidaten uit de advertentiebytes; een gecachte Android-naam bevestigt geen naamgecodeerde tag.</string>
-    <string name="capture_query_hint">Naam of adres</string>
+    <string name="capture_query_hint">Naam, radioadres of OVT-identiteit</string>
+    <string name="capture_filter_test_beacon">OpenVespaTrack-testbakens</string>
+    <string name="capture_test_beacon_help">Start Testbaken op een andere telefoon. Druk hier op Toestellen zoeken en vergelijk de OVT-identiteit en gemeten RSSI. Herkenning gebruikt ontvangen servicedata, ook van bakens uit preview 0.4.0-rc.2. Alleen een gecachte naam is geen overeenkomst.</string>
+    <string name="capture_test_beacon_detected">\nOpenVespaTrack-testbaken · identiteit uit servicedata</string>
+    <string name="capture_test_beacon_sample">\nGedecodeerde testbakenidentiteit: %1$s\nDit weergavelabel is afgeleid van de oorspronkelijke servicedata; de scanbytes blijven ongewijzigd.</string>
     <string name="capture_find_devices">Toestellen zoeken</string>
     <string name="capture_stop_search">Zoeken stoppen</string>
     <string name="capture_bluetooth">Bluetooth</string>

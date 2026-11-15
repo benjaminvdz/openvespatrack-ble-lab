@@ -34,7 +34,11 @@ The [Android workflow](../.github/workflows/android.yml) supplies CI checks. Rec
 
 Build/release automation may assemble an unsigned release variant when no private signing configuration is present. Such an APK is not a downloadable installer. A debug-signed preview must be labelled explicitly; changing signing certificates can require a data-destructive reinstall, so export data first.
 
-## Current evidence boundary
+## Beacon discovery candidate (0.4.0-rc.3)
+
+The receiver recognises the original rc.2 payload. The new transmitter retains that payload and adds the UUID list in a scan response. Use the second-device procedure in [hardware validation](HARDWARE.md) to check actual reception, RSSI, screen-off operation and Stop. The results below belong to rc.2.
+
+## Published rc.2 evidence
 
 Local candidate checks on 2026-11-15 (JDK 17, SDK 36, Gradle 8.13):
 

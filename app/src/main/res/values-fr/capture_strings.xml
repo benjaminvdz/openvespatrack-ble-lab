@@ -12,7 +12,11 @@
     <string name="capture_background_help">L’enregistrement utilise un service au premier plan avec une action Arrêter dans sa notification. Android ou l’économie d’énergie peuvent interrompre la réception écran éteint. L’application ne reprend jamais automatiquement après une interruption.</string>
     <string name="capture_step_find">1 · Rechercher et sélectionner une balise</string>
     <string name="capture_filter_help">Résultats BLE uniquement. Les filtres identifient les candidats à partir des octets d’annonce ; un nom en cache Android ne confirme pas une balise à identité encodée dans le nom.</string>
-    <string name="capture_query_hint">Nom ou adresse</string>
+    <string name="capture_query_hint">Nom, adresse radio ou identité OVT</string>
+    <string name="capture_filter_test_beacon">Balises de test OpenVespaTrack</string>
+    <string name="capture_test_beacon_help">Sur un autre téléphone, démarrez Balise de test. Appuyez ici sur Rechercher des appareils, puis comparez l’identité OVT et le RSSI mesuré. La reconnaissance utilise les données de service reçues, y compris celles des balises de la préversion 0.4.0-rc.2. Un nom en cache ne suffit pas.</string>
+    <string name="capture_test_beacon_detected">\nBalise de test OpenVespaTrack · identité des données de service</string>
+    <string name="capture_test_beacon_sample">\nIdentité de balise de test décodée : %1$s\nCe libellé provient des données de service d’origine ; les octets capturés restent inchangés.</string>
     <string name="capture_find_devices">Rechercher des appareils</string>
     <string name="capture_stop_search">Arrêter la recherche</string>
     <string name="capture_bluetooth">Bluetooth</string>

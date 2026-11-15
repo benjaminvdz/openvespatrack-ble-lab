@@ -10,7 +10,7 @@ The app controls one physical transmitter and one explicit radio activity at a t
 
 Screen rotation, leaving the Activity or switching the screen off does not intentionally end the beacon. Android, battery restrictions, Bluetooth changes, permission revocation, force-stop and reboot can interrupt it. A subsequent start must be explicit. Do not claim uninterrupted operation on a device until tested with an independent receiver.
 
-Use all-BLE/service-data reception. Existing FC65/name-only filters can hide this custom beacon. Match UUID and identity; the address may follow Android's privacy policy. A cached receiver row is not fresh reception: use timestamps to confirm Stop.
+Use the OpenVespaTrack test beacon filter on a second BLE Lab device, or scan all BLE advertisements in another app. Match the UUID in **Service Data** and the identity bytes. Test with both screens on and devices close, then compare screen-off reception. A cached receiver row is not fresh reception: use timestamps to confirm Stop.
 
 If cleanup cannot be confirmed, the app retains radio ownership and shows an uncertain-stop state. Retry Stop or turn Bluetooth off. A failed stop must not be presented as confirmed silence.
 

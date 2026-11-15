@@ -11,9 +11,7 @@ BLE receiver, such as another phone or BLE Tagfinder on a computer.
 2. Open **Test beacon**. Note its `OVT-` identity.
 3. Enable Bluetooth, choose **Start beacon** and grant the requested permissions.
    Allow notifications so Stop remains easy to reach.
-4. On the receiver, select **all BLE devices** or filter on service UUID
-   `6f8a5b00-7d3e-4c6a-9b21-0a5c2d7e9101`. Match the service-data identity;
-   an existing tag-specific filter may hide this custom beacon.
+4. On a second device running the newer BLE Lab, select **Record & replay → OpenVespaTrack test beacons → Find devices** and match the `OVT-` identity. In 0.4.0-rc.2 or another scanner, select **all BLE devices** with no name filter and inspect **Service Data** for UUID `6f8a5b00-7d3e-4c6a-9b21-0a5c2d7e9101`. The `OVT-` identity is encoded in this data.
 5. Confirm reception nearby. Leave the phone at a known test point and move
    the receiver to compare reception. Note obstacles, orientation and distance.
 6. Turn the transmitting phone's screen off for a trial. Check continued

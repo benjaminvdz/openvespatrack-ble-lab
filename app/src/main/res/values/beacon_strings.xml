@@ -20,8 +20,11 @@
     <string name="beacon_elapsed">Controller active for %1$s</string>
     <string name="beacon_no_session">No active controller session</string>
     <string name="beacon_receiver_title">Find the test point</string>
+    <string name="beacon_find">Find a test beacon</string>
+    <string name="beacon_find_hint">Use this on the receiving phone, then start its scan. In this app, stop the local beacon before scanning.</string>
+    <string name="beacon_controller_status">Android advertising status code: %1$d</string>
     <string name="beacon_receiver_steps">1. Enable Bluetooth and tap Start beacon.\n2. On a second device, scan all BLE advertisements and inspect service data.\n3. Match the service UUID and test ID below, then follow the RSSI measured by that receiver.\n4. Tap Stop when finished.\n\nThis custom test format requires an all-BLE view or a compatible decoder. Nano and FC65 filters alone will not identify it.</string>
-    <string name="beacon_details">Service UUID\n%1$s\n\nService data (hex)\n%2$s\n\nVersion 01 + 8 identity bytes. Legacy 1M; requested interval 200 ms; requested power −7 dBm. No device name, manufacturer data or GATT service.</string>
+    <string name="beacon_details">Service UUID\n%1$s\n\nService data (hex)\n%2$s\n\nVersion 01 + 8 identity bytes. Legacy 1M; requested interval 200 ms; requested power −7 dBm. The scan response also lists this UUID for active scanners. No device name, manufacturer data or GATT service.</string>
     <string name="beacon_limits_title">What the status means</string>
     <string name="beacon_limits">Controller acceptance confirms the Android request, not independent radio reception. Use a second receiver to verify the signal. RSSI does not prove distance or direction.\n\nThe foreground session can continue with the screen off. Android, device battery restrictions, permission changes, Bluetooth being turned off, force-stop or reboot can interrupt it. After an interruption, start again explicitly.\n\nThe test ID is random and stored locally for this app installation. It is public over the air, not an authentication token or the phone Bluetooth address. Clearing app data creates a new ID. This mode does not change the phone Bluetooth name.</string>
     <string name="beacon_notification_denied">Notifications are off. The beacon can run, but the notification Stop action may be hidden. Keep this screen available, or enable notifications in Android settings.</string>

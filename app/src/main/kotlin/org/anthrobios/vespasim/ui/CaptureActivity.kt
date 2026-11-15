@@ -27,6 +27,7 @@ import org.anthrobios.vespasim.R
 import org.anthrobios.vespasim.VespaApplication
 import org.anthrobios.vespasim.core.RunStatus
 import org.anthrobios.vespasim.core.SimulationProfile
+import org.anthrobios.vespasim.core.beacon.BeaconIdentityDecoder
 import org.anthrobios.vespasim.core.capture.*
 import org.anthrobios.vespasim.service.CaptureDevice
 import org.anthrobios.vespasim.service.CaptureService
@@ -57,6 +58,7 @@ class CaptureActivity : Activity() {
     private var captureNotes = ""
     private var variant = "unknown"
     private var deviceList: LinearLayout? = null
+    private var filterHelp: TextView? = null
     private var selectionLabel: TextView? = null
     private var captureButton: Button? = null
     private var scanButton: Button? = null
@@ -160,7 +162,7 @@ class CaptureActivity : Activity() {
             if (id != null && kind != null) pendingExport = ExportRequest(id, kind, it.getString("exportName", "recording"))
             importUri = it.getString("importUri")
         }
-        if (savedInstanceState == null) intent.getStringExtra("captureId")?.let { selectedId = it; tab = 1 }
+        if (savedInstanceState == null) applyNavigationIntent(intent)
         val root = column().apply {
             setPadding(dp(14), dp(8), dp(14), dp(8)); setBackgroundColor(Appearance.colors(this@CaptureActivity).page)
             setOnApplyWindowInsetsListener { view, insets ->
@@ -185,6 +187,12 @@ class CaptureActivity : Activity() {
         setContentView(root)
         Appearance.styleTree(root)
         render()
+    }
+    /** Navigation preselects a view only. Find devices remains an explicit user action. */
+    private fun applyNavigationIntent(intent: Intent) {
+        if (intent.getBooleanExtra(EXTRA_TEST_BEACON_FILTER, false)) {
+            tab = 0; filter = CaptureUiLogic.Filter.TEST_BEACON; query = ""; selectedAddress = null
+        } else intent.getStringExtra("captureId")?.let { selectedId = it; tab = 1 }
     }
     override fun onResume() {
         super.onResume()
@@ -229,7 +237,7 @@ class CaptureActivity : Activity() {
         render(); if (tab == 1 && app.initializationComplete) loadArchive()
     }
     private fun render() {
-        body.removeAllViews(); deviceList = null; captureButton = null; scanButton = null; selectionLabel = null
+        body.removeAllViews(); deviceList = null; filterHelp = null; captureButton = null; scanButton = null; selectionLabel = null
         scanStatus = null; liveLabel = null; liveChart = null; playbackChart = null; playbackSeek = null; playbackLabel = null
         if (!app.initializationComplete) { body.addView(text(s(R.string.capture_checking_archive))); return }
         if (tab == 0) renderRecorder() else renderArchiveLoading()
@@ -246,7 +254,7 @@ class CaptureActivity : Activity() {
             updateLive(); refreshLive(); return
         }
         body.addView(text(s(R.string.capture_step_find), 20f))
-        body.addView(text(s(R.string.capture_filter_help), 13f))
+        filterHelp = text("", 13f).also { body.addView(it) }
         body.addView(spinner(CaptureUiLogic.Filter.entries.map { filterLabel(it) }, filter.ordinal, "capture_filter") { filter = CaptureUiLogic.Filter.entries[it]; updateDiscovery() })
         body.addView(edit(s(R.string.capture_query_hint), query, "capture_query") { query = it; updateDiscovery() })
         val actions = row()
@@ -269,21 +277,24 @@ class CaptureActivity : Activity() {
         updateDiscovery()
     }
     private fun model(device: CaptureDevice) = CaptureUiLogic.Device(device.address, device.advertisedName, device.deviceName,
-        device.logicalNanoAddress, device.nanoCandidate, device.vespaCandidate, device.fc65, device.lastSeenElapsedMs)
+        device.logicalNanoAddress, device.nanoCandidate, device.vespaCandidate, device.fc65, device.lastSeenElapsedMs,
+        device.testBeacon)
     private fun updateDiscovery() {
         if (tab != 0 || state?.recording == true || state?.finishing == true) return
-        val devices = state?.devices.orEmpty()
+        val devices = state?.devices.orEmpty().map { it to model(it) }
         val now = SystemClock.elapsedRealtime()
-        selectedAddress = CaptureUiLogic.selection(selectedAddress, devices.map(::model), filter, query, now)
-        val shown = devices.filter { CaptureUiLogic.visible(model(it), filter, query) }.sortedByDescending { it.lastSeenElapsedMs }
-        if (selectedAddress != null && shown.take(80).none { it.address == selectedAddress }) selectedAddress = null
+        filterHelp?.text = s(if (filter == CaptureUiLogic.Filter.TEST_BEACON) R.string.capture_test_beacon_help else R.string.capture_filter_help)
+        selectedAddress = CaptureUiLogic.selection(selectedAddress, devices.map { it.second }, filter, query, now)
+        val shown = devices.filter { CaptureUiLogic.visible(it.second, filter, query) }.sortedByDescending { it.first.lastSeenElapsedMs }
+        if (selectedAddress != null && shown.take(80).none { it.first.address == selectedAddress }) selectedAddress = null
         deviceList?.let { list ->
             list.removeAllViews()
             if (shown.isEmpty()) list.addView(text(if (state?.discovering == true) s(R.string.capture_search_empty) else s(R.string.capture_search_idle), 14f))
-            shown.take(80).forEach { device ->
-                val fresh = CaptureUiLogic.fresh(model(device), now)
+            shown.take(80).forEach { (device, projection) ->
+                val fresh = CaptureUiLogic.fresh(projection, now)
                 val label = (if (selectedAddress == device.address) "✓ " else "") +
-                    "${device.advertisedName ?: s(R.string.capture_unnamed)}\n${device.address} · ${device.lastObservation.measuredRssi?.let { "$it dBm" } ?: s(R.string.capture_rssi_unknown)}" +
+                    "${projection.testBeacon?.label ?: device.advertisedName ?: s(R.string.capture_unnamed)}\n${device.address} · ${device.lastObservation.measuredRssi?.let { "$it dBm" } ?: s(R.string.capture_rssi_unknown)}" +
+                    (projection.testBeacon?.let { s(R.string.capture_test_beacon_detected) } ?: "") +
                     (device.logicalNanoAddress?.let { s(R.string.capture_logical_address, it) } ?: "") +
                     (device.deviceName?.takeIf { it != device.advertisedName }?.let { s(R.string.capture_cached_name, it) } ?: "") +
                     if (fresh) "" else s(R.string.capture_stale)
@@ -497,7 +508,8 @@ class CaptureActivity : Activity() {
                 inspection?.advertisedName ?: s(R.string.capture_not_present), it.deviceName ?: s(R.string.capture_not_present),
                 it.legacy, it.connectable, it.dataStatus, it.primaryPhy, it.secondaryPhy, it.advertisingSid,
                 it.txPowerRaw, it.callbackType, it.rawHex ?: s(R.string.capture_scan_missing),
-                inspection?.replayReason?.let { reason -> CapturePresentation.describe(this, reason) } ?: s(R.string.capture_replay_supported))
+                inspection?.replayReason?.let { reason -> CapturePresentation.describe(this, reason) } ?: s(R.string.capture_replay_supported)) +
+                (BeaconIdentityDecoder.inspect(it)?.let { identity -> s(R.string.capture_test_beacon_sample, identity.label) } ?: "")
         } ?: s(R.string.capture_no_scan_selected)
         staticProfileButton?.isEnabled = item != null && data.record.status != RunStatus.RUNNING && inspection?.replayable == true
     }
@@ -702,6 +714,7 @@ class CaptureActivity : Activity() {
         CaptureUiLogic.Filter.VESPA -> R.string.capture_filter_known
         CaptureUiLogic.Filter.FC65 -> R.string.capture_filter_fc65
         CaptureUiLogic.Filter.ALL -> R.string.capture_filter_all
+        CaptureUiLogic.Filter.TEST_BEACON -> R.string.capture_filter_test_beacon
     })
     private fun statusLabel(value: RunStatus): String = s(when (value) {
         RunStatus.RUNNING -> R.string.capture_status_running
@@ -755,6 +768,7 @@ class CaptureActivity : Activity() {
         }
     }
     companion object {
+        const val EXTRA_TEST_BEACON_FILTER = "org.anthrobios.vespasim.TEST_BEACON_FILTER"
         private const val PERMISSION_SCAN = 301
         private const val PERMISSION_NOTIFICATION = 302
         private const val EXPORT_FILE = 303
