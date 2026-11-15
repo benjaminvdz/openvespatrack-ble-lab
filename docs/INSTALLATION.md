@@ -47,7 +47,7 @@ If notification permission is denied, Android can hide the foreground notificati
 
 **Beacon does not start:** stop any recording or timed radio test, enable Bluetooth, grant the requested permissions and check advertising support.
 
-**Another receiver cannot see it:** select an all-BLE view or match the beacon service UUID. This custom beacon does not automatically match filters for other tag protocols. Test nearby first.
+**Another receiver cannot see it:** first check that the transmitting screen says **Active · controller accepted**. Keep both devices close and start a foreground scan in **Record & replay → OpenVespaTrack test beacons** in newer BLE Lab builds. In 0.4.0-rc.2 or another BLE scanner, use **all BLE devices** with an empty name/address filter and look under **Service Data** for UUID `6f8a5b00-7d3e-4c6a-9b21-0a5c2d7e9101`. The displayed `OVT-` identity is not a Bluetooth device name. A generic Bluetooth pairing list or a tag-specific filter will not reliably show it.
 
 **Radio stopped after a system action:** Bluetooth-off, permission revocation, force-stop, reboot, process termination and manufacturer battery restrictions can interrupt it. Inspect the state and explicitly start a new test.
 

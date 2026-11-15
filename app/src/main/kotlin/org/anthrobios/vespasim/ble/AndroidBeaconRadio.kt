@@ -80,7 +80,7 @@ class AndroidBeaconRadio(
             registered = true
             cleanupConfirmed = false
             // This overload has no duration or event limit: one set continues until Stop.
-            advertiser!!.startAdvertisingSet(parameters(), advertisement(identity), null, null, null,
+            advertiser!!.startAdvertisingSet(parameters(), advertisement(identity), scanResponse(), null, null,
                 callback, Handler(Looper.getMainLooper()))
         } catch (_: SecurityException) { rejectStart(BeaconIssue.PERMISSION) }
         catch (_: IllegalArgumentException) { rejectStart(BeaconIssue.UNSUPPORTED) }
@@ -149,8 +149,14 @@ class AndroidBeaconRadio(
             .setIncludeDeviceName(false).setIncludeTxPowerLevel(false)
             .addServiceData(ParcelUuid.fromString(BeaconIdentity.SERVICE_UUID), identity.serviceData()).build()
 
+        // Keep the original primary service-data packet intact. Active scanners can separately
+        // match the UUID list in this 18-byte response without exceeding either legacy budget.
+        fun scanResponse(): AdvertiseData = AdvertiseData.Builder()
+            .setIncludeDeviceName(false).setIncludeTxPowerLevel(false)
+            .addServiceUuid(ParcelUuid.fromString(BeaconIdentity.SERVICE_UUID)).build()
+
         fun parameters(): AdvertisingSetParameters = AdvertisingSetParameters.Builder()
-            .setLegacyMode(true).setConnectable(false).setScannable(false)
+            .setLegacyMode(true).setConnectable(false).setScannable(true)
             .setPrimaryPhy(BluetoothDevice.PHY_LE_1M).setSecondaryPhy(BluetoothDevice.PHY_LE_1M)
             .setInterval(BeaconIdentity.INTERVAL_MS * 8 / 5)
             .setTxPowerLevel(BeaconIdentity.REQUESTED_TX_POWER_DBM).build()

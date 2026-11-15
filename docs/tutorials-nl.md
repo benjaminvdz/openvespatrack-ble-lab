@@ -22,9 +22,7 @@ ontvanger, bijvoorbeeld een andere telefoon of BLE Tagfinder op een computer.
 2. Open **Testbaken** en noteer de identiteit die met `OVT-` begint.
 3. Zet Bluetooth aan, kies **Start baken** en geef de gevraagde toestemmingen.
    Sta meldingen toe zodat de stopknop gemakkelijk bereikbaar blijft.
-4. Toon op de ontvanger **alle BLE-toestellen**, of filter op service-UUID
-   `6f8a5b00-7d3e-4c6a-9b21-0a5c2d7e9101`. Vergelijk de identiteit in de
-   servicedata. Een filter voor andere tagprotocollen kan dit baken verbergen.
+4. Kies in de nieuwere BLE Lab op het tweede toestel de filter voor **OpenVespaTrack-testbakens** in het opnamescherm. Start de scan en vergelijk de `OVT-`-identiteit. Kies in 0.4.0-rc.2 of een andere BLE-scanner **alle BLE-toestellen** zonder naamfilter. Kijk bij **Service Data** naar UUID `6f8a5b00-7d3e-4c6a-9b21-0a5c2d7e9101`. De `OVT-`-identiteit staat in die servicedata.
 5. Controleer eerst van dichtbij of het signaal aankomt. Leg de zendende
    telefoon op een gekend testpunt en verplaats de ontvanger. Noteer afstand,
    obstakels en oriëntatie.

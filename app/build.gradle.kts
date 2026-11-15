@@ -11,8 +11,8 @@ android {
         applicationId = "org.anthrobios.vespasim"
         minSdk = 26
         targetSdk = 36
-        versionCode = 6
-        versionName = "0.4.0-rc.2"
+        versionCode = 7
+        versionName = "0.4.0-rc.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "GIT_COMMIT", "\"${System.getenv("VESPA_GIT_COMMIT")?.takeIf { it.matches(Regex("[0-9a-fA-F]{7,40}")) } ?: "unknown"}\"")
     }

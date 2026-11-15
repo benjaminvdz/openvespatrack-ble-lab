@@ -25,6 +25,8 @@ import org.anthrobios.vespasim.R
 import org.anthrobios.vespasim.VespaApplication
 import org.anthrobios.vespasim.ble.AndroidCaptureScanner
 import org.anthrobios.vespasim.core.RunStatus
+import org.anthrobios.vespasim.core.beacon.BeaconIdentity
+import org.anthrobios.vespasim.core.beacon.BeaconIdentityDecoder
 import org.anthrobios.vespasim.core.capture.CaptureCodec
 import org.anthrobios.vespasim.core.capture.CaptureEvent
 import org.anthrobios.vespasim.core.capture.CaptureObservation
@@ -48,6 +50,7 @@ data class CaptureDevice(
     val fc65: Boolean,
     val lastSeenElapsedMs: Long,
     val lastObservation: CaptureObservation,
+    val testBeacon: BeaconIdentity? = null,
 )
 
 data class CaptureState(
@@ -367,7 +370,7 @@ class CaptureService : Service() {
         // Identity metadata remains separate: advertisedName always comes from this callback's bytes.
         devices[observation.address] = CaptureDevice(observation.address, observation.deviceName ?: previous?.deviceName,
             parsed.advertisedName, parsed.logicalNanoAddress, parsed.nanoCandidate, parsed.vespaCandidate, parsed.fc65,
-            observation.timestampNanos / 1_000_000, observation)
+            observation.timestampNanos / 1_000_000, observation, BeaconIdentityDecoder.inspect(observation))
     }
 
     private fun stopScanner(current: ScanSession) {

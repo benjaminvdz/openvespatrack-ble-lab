@@ -20,8 +20,11 @@
     <string name="beacon_elapsed">Controller actief sinds %1$s</string>
     <string name="beacon_no_session">Geen actieve controllersessie</string>
     <string name="beacon_receiver_title">Vind het testpunt</string>
+    <string name="beacon_find">Testbaken zoeken</string>
+    <string name="beacon_find_hint">Gebruik dit op de ontvangende telefoon en start daar de zoekactie. Stop in deze app het eigen baken voordat je gaat zoeken.</string>
+    <string name="beacon_controller_status">Android-statuscode voor BLE-uitzenden: %1$d</string>
     <string name="beacon_receiver_steps">1. Zet Bluetooth aan en druk op Start baken.\n2. Zoek op een tweede toestel naar alle BLE-advertenties en bekijk de servicedata.\n3. Vergelijk de service-UUID en het test-ID hieronder en volg de RSSI die die ontvanger meet.\n4. Druk op Stop wanneer je klaar bent.\n\nDit eigen testformaat vereist een weergave van alle BLE-signalen of een passende decoder. Alleen Nano- en FC65-filters herkennen het niet.</string>
-    <string name="beacon_details">Service-UUID\n%1$s\n\nServicedata (hex)\n%2$s\n\nVersie 01 + 8 identiteitsbytes. Legacy 1M; gevraagd interval 200 ms; gevraagd vermogen −7 dBm. Geen toestelnaam, manufacturerdata of GATT-service.</string>
+    <string name="beacon_details">Service-UUID\n%1$s\n\nServicedata (hex)\n%2$s\n\nVersie 01 + 8 identiteitsbytes. Legacy 1M; gevraagd interval 200 ms; gevraagd vermogen −7 dBm. De scanresponse vermeldt deze UUID ook voor actieve ontvangers. Geen toestelnaam, manufacturerdata of GATT-service.</string>
     <string name="beacon_limits_title">Wat de status betekent</string>
     <string name="beacon_limits">Controlleracceptatie bevestigt de Android-aanvraag, geen onafhankelijke radio-ontvangst. Controleer het signaal met een tweede ontvanger. RSSI bewijst geen afstand of richting.\n\nDe foreground-sessie kan doorgaan met het scherm uit. Android, batterijbeperkingen, gewijzigde rechten, Bluetooth uitschakelen, geforceerd stoppen of herstarten kunnen de sessie onderbreken. Start na een onderbreking opnieuw met de knop.\n\nHet test-ID is willekeurig en lokaal opgeslagen voor deze appinstallatie. Het is openbaar in het radiosignaal, geen authenticatiesleutel of Bluetoothadres van de telefoon. Appgegevens wissen maakt een nieuw ID. Deze modus verandert de Bluetoothnaam van de telefoon niet.</string>
     <string name="beacon_notification_denied">Meldingen staan uit. Het baken kan werken, maar de Stop-knop in de melding kan verborgen zijn. Houd dit scherm beschikbaar of zet meldingen aan in de Android-instellingen.</string>

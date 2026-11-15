@@ -13,13 +13,14 @@ The continuous test beacon is the recommended starting point for a known search 
 | Service-data UUID | `6f8a5b00-7d3e-4c6a-9b21-0a5c2d7e9101` |
 | Service data | One version byte `01`, followed by eight synthetic identity bytes |
 | Displayed identity | `OVT-` followed by the same eight bytes as 16 hexadecimal characters |
-| Radio request | Legacy LE 1M, nonconnectable, nonscannable |
+| Radio request | Legacy LE 1M, nonconnectable, scannable |
 | Requested interval / power | 200 ms / −7 dBm |
-| Other content | No device name, manufacturer data, scan response or GATT service |
+| Active scan response | 128-bit service UUID list with the same UUID. No connection is offered. |
+| Other content | No device name, manufacturer data or GATT service |
 
 The random identity is stored locally for this installation. It is public in the advertisement, not a secret, authentication key or the phone's Bluetooth address. Clearing app data creates a new identity. This mode does not change the phone's Bluetooth name.
 
-Use a receiver showing **all BLE advertisements** and inspect service data. A receiver restricted to FC65 or name-based candidates may hide this beacon; its decoder must explicitly support this format to label it. The app's controller status does not demonstrate reception. There is no scenario-duration cutoff, but Android or hardware interruptions can stop a session.
+Version 0.4.0-rc.2 transmits the same identity in its primary advertisement but has no scan response. The receiver in newer BLE Lab builds recognises both versions under **Record & replay → OpenVespaTrack test beacons**. In another BLE scanner, start with all advertisements and inspect **Service Data**. A service UUID-list filter differs from a Service Data filter, and active scanners only see the new UUID list if they receive the scan response. Name, Nano and FC65 filters can hide this beacon. The app's controller status does not demonstrate reception. There is no scenario-duration cutoff, but Android or hardware interruptions can stop a session.
 
 ## Experimental manufacturer data
 

@@ -1,15 +1,18 @@
 package org.anthrobios.vespasim.ui
 
 import org.anthrobios.vespasim.core.capture.CaptureObservation
+import org.anthrobios.vespasim.core.beacon.BeaconIdentity
 import java.util.Locale
 
 /** Pure display rules. Cached device names never make a device a Nano candidate. */
 object CaptureUiLogic {
-    enum class Filter { NANO, VESPA, FC65, ALL }
+    // Append new values: existing saved UI-state ordinals retain their meaning.
+    enum class Filter { NANO, VESPA, FC65, ALL, TEST_BEACON }
     data class Device(
         val address: String, val advertisedName: String?, val cachedName: String?,
         val logicalAddress: String?, val nano: Boolean, val vespa: Boolean,
         val fc65: Boolean, val lastSeenMs: Long,
+        val testBeacon: BeaconIdentity? = null,
     )
     const val FRESH_MS = 10_000L
     const val PAGE_SIZE = 100
@@ -19,10 +22,11 @@ object CaptureUiLogic {
             Filter.VESPA -> device.vespa
             Filter.FC65 -> device.fc65
             Filter.ALL -> true
+            Filter.TEST_BEACON -> device.testBeacon != null
         }
         val q = query.trim().lowercase(Locale.ROOT)
         return candidate && (q.isEmpty() || listOfNotNull(device.address, device.advertisedName,
-            device.cachedName, device.logicalAddress).any {
+            device.cachedName, device.logicalAddress, device.testBeacon?.label, device.testBeacon?.hex).any {
                 it.lowercase(Locale.ROOT).contains(q) || it.replace(":", "").lowercase(Locale.ROOT).contains(q.replace(":", ""))
             })
     }

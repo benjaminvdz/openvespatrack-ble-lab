@@ -26,6 +26,7 @@ class BeaconActivity : Activity() {
     private var live = BeaconSnapshot()
     private val main = Handler(Looper.getMainLooper())
     private lateinit var status: TextView
+    private lateinit var controllerStatus: TextView
     private lateinit var identity: TextView
     private lateinit var details: TextView
     private lateinit var elapsed: TextView
@@ -33,6 +34,7 @@ class BeaconActivity : Activity() {
     private lateinit var start: Button
     private lateinit var stop: Button
     private lateinit var copy: Button
+    private lateinit var findBeacon: Button
     private val listener: (BeaconSnapshot) -> Unit = { live = it; render() }
     private val tick = object : Runnable {
         override fun run() { if (visible) { render(); main.postDelayed(this, 1_000) } }
@@ -76,6 +78,8 @@ class BeaconActivity : Activity() {
         session.addView(text(R.string.beacon_status_label, 12f))
         status = text(R.string.beacon_ready, 21f).apply { tag = "beacon_status"; accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE }
         session.addView(status)
+        controllerStatus = text(R.string.beacon_controller_status, 14f).apply { tag = "beacon_controller_status"; visibility = View.GONE }
+        session.addView(controllerStatus)
         identity = text(R.string.beacon_identity_loading, 22f).apply { tag = "beacon_identity"; setTextIsSelectable(true) }
         session.addView(identity)
         elapsed = text(R.string.beacon_no_session, 14f)
@@ -98,6 +102,11 @@ class BeaconActivity : Activity() {
         session.addView(copy)
         val guide = card(body)
         guide.addView(text(R.string.beacon_receiver_title, 21f))
+        findBeacon = button(R.string.beacon_find) {
+            startActivity(Intent(this, CaptureActivity::class.java).putExtra(CaptureActivity.EXTRA_TEST_BEACON_FILTER, true))
+        }.apply { tag = "beacon_find" }
+        guide.addView(findBeacon)
+        guide.addView(text(R.string.beacon_find_hint, 15f).apply { Appearance.reading(this) })
         guide.addView(text(R.string.beacon_receiver_steps, 15f).apply { Appearance.reading(this) })
         details = text(R.string.beacon_identity_loading, 13f).apply { setTextIsSelectable(true) }
         guide.addView(details)
@@ -161,6 +170,9 @@ class BeaconActivity : Activity() {
     private fun render() {
         if (!::status.isInitialized) return
         status.text = if (live.preparing) getString(R.string.beacon_starting) else BeaconText.message(this, live.state)
+        val code = live.state.platformCode?.takeIf { it in 0..255 }
+        controllerStatus.visibility = if (code == null) View.GONE else View.VISIBLE
+        if (code != null) controllerStatus.text = getString(R.string.beacon_controller_status, code)
         identity.text = live.identity?.label ?: getString(R.string.beacon_identity_loading)
         val active = live.state.phase == BeaconPhase.ACTIVE
         elapsed.text = if (active && live.state.acceptedAtMs != null) {
@@ -170,6 +182,7 @@ class BeaconActivity : Activity() {
         start.isEnabled = service != null && live.identity != null && !live.state.ownsRadio && !live.preparing
         stop.isEnabled = service != null && (live.state.ownsRadio || live.preparing)
         copy.isEnabled = live.identity != null
+        findBeacon.isEnabled = !live.state.ownsRadio && !live.preparing
         details.text = getString(R.string.beacon_details, BeaconIdentity.SERVICE_UUID,
             live.identity?.serviceData()?.joinToString("") { "%02x".format(it.toInt() and 255) } ?: "—")
         notice.visibility = if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) View.VISIBLE else View.GONE

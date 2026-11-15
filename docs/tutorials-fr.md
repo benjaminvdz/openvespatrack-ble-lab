@@ -24,10 +24,7 @@ ordinateur.
 3. Activez Bluetooth, choisissez **Démarrer la balise** et accordez les
    autorisations demandées. Autorisez les notifications pour accéder facilement
    à l'arrêt.
-4. Sur le récepteur, affichez **tous les appareils BLE**, ou filtrez par l'UUID
-   de service `6f8a5b00-7d3e-4c6a-9b21-0a5c2d7e9101`. Vérifiez l'identité dans
-   les données de service. Un filtre destiné à un autre protocole de balise
-   peut masquer ce signal.
+4. Dans la nouvelle version de BLE Lab sur le second appareil, sélectionnez le filtre **Balises de test OpenVespaTrack** dans l’écran d’enregistrement, lancez la recherche et comparez l’identité `OVT-`. Dans la version 0.4.0-rc.2 ou un autre scanner, affichez **tous les appareils BLE** sans filtre de nom et cherchez l’UUID `6f8a5b00-7d3e-4c6a-9b21-0a5c2d7e9101` dans les **données de service**. L’identité `OVT-` est encodée dans ces données.
 5. Vérifiez d'abord la réception à proximité. Laissez le téléphone émetteur à
    un point connu et déplacez le récepteur. Notez distance, obstacles et orientation.
 6. Éteignez l'écran de l'émetteur pour un essai. Vérifiez la continuité sur le
