@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "provenance": "Independent synthetic vectors for the FC65 protocol hypothesis; no captured tag traffic or proof of firmware compatibility.",
+  "companyId": 64613,
+  "localRssi": -70,
+  "vectors": [
+    {
+      "id": "direct-id-4660-counter-1",
+      "buildTrack": {"id": "tag-a", "counterStart": 1},
+      "frameIndex": 0,
+      "payloadHex": "003412010000",
+      "expectedDecode": {"kind": "direct_tag", "fields": {"short_tag_id": 4660, "subtype": 0, "counter": 1, "counter_bits_candidate": 24, "temperature_raw_candidate": null}}
+    },
+    {
+      "id": "direct-subtype-3-little-endian",
+      "buildTrack": {"id": "tag-a", "subtype": 3, "shortId": 43981, "counterStart": 66051},
+      "frameIndex": 0,
+      "payloadHex": "0ccdab030201",
+      "expectedDecode": {"kind": "direct_tag", "fields": {"short_tag_id": 43981, "subtype": 3, "counter": 66051, "counter_bits_candidate": 24}}
+    },
+    {
+      "id": "direct-24bit-wrap",
+      "buildTrack": {"id": "tag-a", "shortId": 0, "counterStart": 16777215},
+      "frameIndex": 1,
+      "payloadHex": "000000000000",
+      "expectedDecode": {"kind": "direct_tag", "fields": {"short_tag_id": 0, "counter": 0, "counter24_alternative": 0}}
+    },
+    {
+      "id": "heuristic-boundary-third-byte-5",
+      "buildTrack": {"id": "tag-a", "counterStart": 332340},
+      "frameIndex": 0,
+      "payloadHex": "003412341205",
+      "expectedDecode": {"kind": "direct_tag", "fields": {"counter": 332340, "counter_bits_candidate": 24, "temperature_raw_candidate": null}}
+    },
+    {
+      "id": "heuristic-boundary-third-byte-6",
+      "buildTrack": {"id": "tag-a", "counterStart": 397876},
+      "frameIndex": 0,
+      "payloadHex": "003412341206",
+      "expectedDecode": {"kind": "direct_tag", "fields": {"counter": 4660, "counter24_alternative": 397876, "counter_bits_candidate": 16, "temperature_raw_candidate": 6, "temperature_unit": null}}
+    },
+    {
+      "id": "16bit-temperature-wrap",
+      "buildTrack": {"id": "tag-a", "counterMode": "COUNTER16_TEMPERATURE", "counterStart": 65535, "temperatureRaw": 22},
+      "frameIndex": 2,
+      "payloadHex": "003412010016",
+      "expectedDecode": {"kind": "direct_tag", "fields": {"counter": 1, "counter_bits_candidate": 16, "temperature_raw_candidate": 22, "temperature_unit": null}}
+    },
+    {
+      "id": "counter-explicit-reset",
+      "buildTrack": {"id": "tag-a", "counterStart": 10, "counterResetEvery": 3},
+      "frameIndex": 3,
+      "payloadHex": "0034120a0000",
+      "expectedDecode": {"kind": "direct_tag", "fields": {"counter": 10, "counter_bits_candidate": 24}}
+    },
+    {
+      "id": "repeater-signed-rssi-minus-56",
+      "buildTrack": {"id": "repeater-a", "kind": "REPEATER", "counterStart": 1, "rssi": {"min": -56, "max": -56}},
+      "frameIndex": 0,
+      "payloadHex": "01010203040506c8010000",
+      "expectedDecode": {"kind": "repeater_tag", "fields": {"transmitter_bytes_hex": "010203040506", "reported_tag_rssi_raw": -56, "reported_tag_rssi_dbm_candidate": -56, "counter": 1}}
+    },
+    {
+      "id": "repeater-unavailable-rssi-127",
+      "buildTrack": {"id": "repeater-a", "kind": "REPEATER", "rssi": {"min": 127, "max": 127}},
+      "frameIndex": 0,
+      "payloadHex": "010102030405067f000000",
+      "expectedDecode": {"kind": "repeater_tag", "fields": {"reported_tag_rssi_raw": 127, "reported_tag_rssi_dbm_candidate": null}}
+    },
+    {
+      "id": "repeater-invalid-rssi-minus-128",
+      "buildTrack": {"id": "repeater-a", "kind": "REPEATER", "rssi": {"min": -128, "max": -128}},
+      "frameIndex": 0,
+      "payloadHex": "0101020304050680000000",
+      "expectedDecode": {"kind": "repeater_tag", "fields": {"reported_tag_rssi_raw": -128, "reported_tag_rssi_dbm_candidate": null}}
+    },
+    {
+      "id": "raw-status-preserves-suffix",
+      "buildTrack": {"id": "raw-a", "kind": "RAW", "rawFrames": ["03aabb"]},
+      "frameIndex": 0,
+      "payloadHex": "03aabb",
+      "expectedDecode": {"kind": "status", "fields": {"message_type": 3, "uninterpreted_suffix_hex": "aabb"}}
+    },
+    {
+      "id": "raw-unknown-type-preserves-suffix",
+      "buildTrack": {"id": "raw-a", "kind": "RAW", "rawFrames": ["02dead"]},
+      "frameIndex": 0,
+      "payloadHex": "02dead",
+      "expectedDecode": {"kind": "unknown_type", "fields": {"message_type": 2, "uninterpreted_suffix_hex": "dead"}}
+    },
+    {
+      "id": "raw-truncated-direct",
+      "buildTrack": {"id": "raw-a", "kind": "RAW", "rawFrames": ["003412"]},
+      "frameIndex": 0,
+      "payloadHex": "003412",
+      "expectedDecode": {"kind": "invalid", "fields": {"required_length": 6}}
+    },
+    {
+      "id": "raw-truncated-repeater",
+      "buildTrack": {"id": "raw-a", "kind": "RAW", "rawFrames": ["01010203040506c8"]},
+      "frameIndex": 0,
+      "payloadHex": "01010203040506c8",
+      "expectedDecode": {"kind": "invalid", "fields": {"required_length": 11}}
+    },
+    {
+      "id": "raw-empty-payload-is-not-silence",
+      "buildTrack": {"id": "raw-a", "kind": "RAW", "rawFrames": [""]},
+      "frameIndex": 0,
+      "payloadHex": "",
+      "expectedDecode": {"kind": "invalid", "fields": {"payload_length": 0}}
+    },
+    {
+      "id": "raw-unknown-header-bits",
+      "buildTrack": {"id": "raw-a", "kind": "RAW", "rawFrames": ["f03412010000"]},
+      "frameIndex": 0,
+      "payloadHex": "f03412010000",
+      "expectedDecode": {"kind": "direct_tag", "fields": {"unknown_header_bits": 240, "subtype": 0, "short_tag_id": 4660, "counter": 1}}
+    },
+    {
+      "id": "raw-company-prefix-must-not-be-stripped-twice",
+      "buildTrack": {"id": "raw-a", "kind": "RAW", "rawFrames": ["65fc3412010000"]},
+      "frameIndex": 0,
+      "payloadHex": "65fc3412010000",
+      "expectedDecode": {"kind": "invalid", "fields": {"message_type": 1, "subtype": 1, "required_length": 11}}
+    }
+  ]
+}

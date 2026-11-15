@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "rssi-unavailable",
+  "name": "08 · Relay — unavailable reported RSSI",
+  "description": "An increasing reported RSSI with sentinel 127 every fifth attempt. The receiving chart must distinguish unavailable values from strong reception.",
+  "tracks": [
+    {
+      "id": "repeater-unavailable",
+      "kind": "REPEATER",
+      "rssi": {
+        "mode": "RAMP",
+        "min": -90,
+        "max": -40,
+        "periodSlots": 15,
+        "unavailableEvery": 5
+      }
+    }
+  ]
+}

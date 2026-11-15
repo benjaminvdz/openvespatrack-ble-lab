@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "combined-tracking",
+  "name": "09 · Combined tracking scenario",
+  "description": "Direct and relayed records, arrival/departure, pauses, omissions and a sentinel. Tracks share one radio; the seed and profile reproduce the planned bytes.",
+  "seed": 20261026,
+  "durationMs": 60000,
+  "lossPercent": 20,
+  "tracks": [
+    {
+      "id": "direct-a",
+      "activeUntilMs": 45000
+    },
+    {
+      "id": "repeater",
+      "kind": "REPEATER",
+      "transmitterHex": "020304050607",
+      "rssi": {
+        "mode": "TRIANGLE",
+        "min": -100,
+        "max": -45,
+        "periodSlots": 24,
+        "unavailableEvery": 11
+      }
+    },
+    {
+      "id": "direct-b",
+      "shortId": 4661,
+      "counterStart": 250,
+      "activeFromMs": 15000
+    }
+  ],
+  "pauses": [
+    {
+      "fromMs": 20000,
+      "untilMs": 25000
+    }
+  ]
+}

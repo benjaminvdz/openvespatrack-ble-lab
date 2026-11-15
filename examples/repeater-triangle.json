@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "repeater-triangle",
+  "name": "02 · Relay — triangular reported RSSI",
+  "description": "A six-byte transmitter identity with reported RSSI from -95 to -40. This value is payload content; it does not set the signal measured from this phone.",
+  "tracks": [
+    {
+      "id": "repeater-a",
+      "kind": "REPEATER",
+      "rssi": {
+        "mode": "TRIANGLE",
+        "min": -95,
+        "max": -40,
+        "periodSlots": 20
+      }
+    }
+  ]
+}

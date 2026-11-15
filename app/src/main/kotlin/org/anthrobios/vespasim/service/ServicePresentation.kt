@@ -1,0 +1,223 @@
+package org.anthrobios.vespasim.service
+
+import android.content.Context
+import org.anthrobios.vespasim.R
+import org.anthrobios.vespasim.ui.Appearance
+
+/**
+ * Localized projection of legacy diagnostic messages. Never write this text back to a run,
+ * profile, capture or recovery journal: their original evidence and identifiers stay intact.
+ * Only known message shapes are translated; unknown platform diagnostics remain verbatim.
+ */
+object ServicePresentation {
+    fun describe(context: Context, raw: String): String {
+        val localized = Appearance.wrapContext(context)
+        return render(raw) { resource, arguments -> localized.getString(resource, *arguments.toTypedArray()) }
+    }
+
+    /** Pure matching boundary, also used by unit tests without Android resource loading. */
+    internal fun render(raw: String, text: (Int, List<String>) -> String): String =
+        renderMessage(raw, text, 0, false)
+
+    private fun renderMessage(raw: String, text: (Int, List<String>) -> String, depth: Int, diagnostic: Boolean): String {
+        if (depth > 12) return raw
+        exact[raw]?.let { return text(it, emptyList()) }
+        // Try the whole message first: a platform diagnostic nested inside it may contain newlines.
+        for (rule in patterns) {
+            val match = rule.pattern.matchEntire(raw) ?: continue
+            val arguments = match.groupValues.drop(1).mapIndexed { index, value ->
+                if (index + 1 in rule.translatedGroups) renderMessage(value, text, depth + 1, true) else value
+            }
+            return text(rule.resource, arguments)
+        }
+        if ('\n' in raw) return raw.split('\n').joinToString("\n") { renderMessage(it, text, depth + 1, diagnostic) }
+        return if (diagnostic && raw.isNotBlank()) text(R.string.service_original_diagnostic, listOf(raw)) else raw
+    }
+
+    private data class Rule(val pattern: Regex, val resource: Int, val translatedGroups: Set<Int>)
+
+    private val exact: Map<String, Int> = mapOf(
+        "Gereed. Hardwareloze simulatie gebruikt geen Bluetooth." to R.string.service_ready_dry,
+        "Gereed" to R.string.service_ready,
+        "Bluetoothadapter uitgeschakeld of verwijderd" to R.string.service_adapter_lost,
+        "Startaanvraag geannuleerd: scherm niet meer zichtbaar." to R.string.service_cancel_hidden,
+        "Hardwareloze proef gestopt: app niet meer zichtbaar" to R.string.service_dry_hidden,
+        "Gestopt door gebruiker" to R.string.service_stopped_user,
+        "Startaanvraag geannuleerd." to R.string.service_start_cancelled,
+        "Bluetoothtoestemming ontbreekt" to R.string.service_permission_missing,
+        "Bluetoothnaam herstellen…" to R.string.service_restoring_name,
+        "BLE voorbereiden…" to R.string.service_preparing_ble,
+        "Er loopt al een scenario of een startaanvraag. Stop dat eerst." to R.string.service_already_starting,
+        "Profielen en logherstel worden nog voorbereid" to R.string.service_initializing_profiles,
+        "Start vanuit het zichtbare scherm" to R.string.service_start_visible,
+        "Profiel controleren; nog geen radio gestart." to R.string.service_checking_profile,
+        "Startaanvraag geannuleerd; geen radio gestart." to R.string.service_cancel_no_radio,
+        "Er loopt al een scenario of naamherstel. Wacht tot dit is afgerond." to R.string.service_scenario_or_restore,
+        "Gegevensinitialisatie nog niet voltooid" to R.string.service_initializing_data,
+        "BLE gebruikt snelheid 1; hardwareloos 1–100" to R.string.service_speed_range,
+        "Start eerst de BLE-voorgrondservice vanuit het zichtbare scherm" to R.string.service_foreground_required,
+        "Er staat Bluetoothnaamherstel open. Kies eerst Bluetoothnaam herstellen; dry-run blijft beschikbaar." to R.string.service_recovery_required,
+        "Startaanvraag geannuleerd vóór uitvoering" to R.string.service_cancel_before_run,
+        "Scenario voorbereiden" to R.string.service_preparing_scenario,
+        "Startaanvraag geannuleerd vóór radio-uitvoering" to R.string.service_cancel_before_radio,
+        "Geen actieve proef voor logregel" to R.string.service_no_active_log,
+        "Stop eerst de actieve proef of wacht tot naamherstel klaar is." to R.string.service_wait_restore,
+        "Oorspronkelijke Bluetoothnaam herstellen; er wordt geen radio gestart." to R.string.service_restoring_no_radio,
+        "Bluetoothnaamherstel afgerond; er wordt niets uitgezonden." to R.string.service_restored_no_radio,
+        "De vorige radio-stop is nog niet bevestigd. Wacht op de stopbevestiging of zet Bluetooth uit, stop de app volledig via App-info en open opnieuw." to R.string.service_previous_stop_pending,
+        "Stop eerst het zoeken of opnemen voordat je uitzendt of de Bluetoothnaam herstelt." to R.string.service_stop_capture_first,
+        "Bluetoothadapter niet ingeschakeld" to R.string.service_adapter_disabled,
+        "Deze telefoon heeft geen Bluetoothadapter." to R.string.service_phone_no_adapter,
+        "Bluetooth is uitgeschakeld. Schakel het in via de telefooninstellingen en probeer opnieuw." to R.string.service_phone_bluetooth_off,
+        "Deze telefoon biedt geen BLE-advertiser aan." to R.string.service_phone_no_advertiser,
+        "Deze telefoon ondersteunt geen extended advertising. Kies expliciet een legacy-profiel." to R.string.service_phone_no_extended,
+        "Deze telefoon ondersteunt geen Coded PHY." to R.string.service_phone_no_coded,
+        "BLUETOOTH_ADVERTISE ontbreekt" to R.string.service_advertise_missing,
+        "BLUETOOTH_CONNECT ontbreekt" to R.string.service_connect_missing,
+        "Hardwareloze proef gestopt: app verwijderd uit recente apps" to R.string.service_dry_removed,
+        "Service beëindigd door Android" to R.string.service_service_ended,
+        "Dry-run mag geen radio aanroepen" to R.string.service_dry_no_radio,
+        "Plan is niet aaneengesloten en oplopend" to R.string.service_invalid_plan,
+        "Een engine kan maar eenmaal starten" to R.string.service_engine_once,
+        "Hardwareloze simulatie; er wordt niets uitgezonden." to R.string.service_dry_no_transmission,
+        "BLE-scenario gestart; controlleracceptatie bewijst geen radio-ontvangst." to R.string.service_scenario_started,
+        "Scenario gepauzeerd; uitschakelen radio aangevraagd." to R.string.service_scenario_paused,
+        "Scenario hervat." to R.string.service_scenario_resumed,
+        "Pauzeren; wachten op uitschakelbevestiging" to R.string.service_pausing,
+        "Hervatten" to R.string.service_resuming,
+        "Gepauzeerd; controller bevestigde uitschakelen" to R.string.service_paused_confirmed,
+        "Gepauzeerd" to R.string.service_paused,
+        "Scenario voltooid" to R.string.service_completed,
+        "planned_pause" to R.string.service_planned_pause,
+        "no_active_track" to R.string.service_no_active_track,
+        "seeded_omission" to R.string.service_seeded_omission,
+        "Payload instellen" to R.string.service_apply_payload,
+        "Radio uitschakelen" to R.string.service_silence_radio,
+        "Geen stopbevestiging ontvangen. Zet Bluetooth uit als uitzending blijft doorgaan." to R.string.service_no_stop_confirmation,
+        "Radio-stop mislukt" to R.string.service_radio_stop_failed,
+        "Scenario-eindtijd bereikt met onbevestigde controlleraanvraag" to R.string.service_end_unconfirmed,
+        "Radio is gesloten" to R.string.service_radio_closed,
+        "Een controlleraanvraag is nog bezig" to R.string.service_controller_busy,
+        "Geen Bluetoothadapter beschikbaar" to R.string.service_no_adapter,
+        "Bluetooth is uitgeschakeld" to R.string.service_bluetooth_off,
+        "Advertentienaam wijkt af van de profielsnapshot" to R.string.service_name_snapshot_mismatch,
+        "Opnamereplay ondersteunt alleen legacy 1M" to R.string.service_replay_legacy_only,
+        "Opnameframe wijkt af van de oorspronkelijke scanbytes" to R.string.service_replay_bytes_mismatch,
+        "Naamadvertentie vereist een naam en geen manufacturer-payload" to R.string.service_name_only_required,
+        "Naam en payload overschrijden het advertentiebudget" to R.string.service_advertising_budget,
+        "Legacy-payload overschrijdt conservatieve limiet van 24 bytes" to R.string.service_legacy_payload_limit,
+        "Extended advertising wordt niet ondersteund" to R.string.service_extended_unsupported,
+        "Naam en payload overschrijden controllerlimiet" to R.string.service_controller_payload_limit,
+        "LE Coded PHY wordt niet ondersteund" to R.string.service_coded_unsupported,
+        "Startaanvraag loopt nog" to R.string.service_start_pending,
+        "BLE-advertising niet beschikbaar op dit toestel" to R.string.service_advertising_unavailable,
+        "Start niet actief" to R.string.service_start_inactive,
+        "Advertising-set gestart" to R.string.service_advertising_started,
+        "Payload ingesteld" to R.string.service_payload_set,
+        "Ingeschakeld" to R.string.service_enabled,
+        "Uitgeschakeld" to R.string.service_disabled,
+        "Advertising-set gestopt" to R.string.service_advertising_stopped,
+        "Advertising-set onverwacht gestopt" to R.string.service_advertising_unexpected_stop,
+        "Al uitgeschakeld" to R.string.service_already_disabled,
+        "Al gesloten" to R.string.service_already_closed,
+        "Stopaanvraag loopt al" to R.string.service_stop_pending,
+        "Geen actieve advertising-set" to R.string.service_no_advertising_set,
+        "Advertiser ontbreekt tijdens stop" to R.string.service_advertiser_missing_stop,
+        "Toestemming om Bluetooth uit te zenden ontbreekt" to R.string.service_advertising_permission_missing,
+        "Payload te groot voor controller/mode" to R.string.service_controller_payload_too_large,
+        "Geen advertising-set beschikbaar; stop andere BLE-zenders" to R.string.service_no_advertising_capacity,
+        "Advertising-set al gestart" to R.string.service_advertising_already_started,
+        "Interne Android/controllerfout" to R.string.service_controller_internal_error,
+        "Advertentiefunctie niet ondersteund" to R.string.service_advertising_unsupported,
+        "Een stilteslot heeft geen advertentiedata" to R.string.service_silence_no_data,
+        "Opname-inhoud overschrijdt het legacy-advertentiebudget" to R.string.service_capture_budget,
+        "Bluetoothtoestemming nog niet verleend. Hardwareloze simulaties blijven beschikbaar." to R.string.service_cap_permission_missing,
+        "Geen Bluetoothadapter beschikbaar." to R.string.service_cap_no_adapter,
+        "De simulator gebruikt één advertising-set. Virtuele tags delen dezelfde fysieke zender; afzonderlijke MAC-adressen worden niet nagebootst." to R.string.service_cap_single_radio,
+        "Bij BLE-start met Local Name stelt de app de algemene Bluetoothnaam tijdelijk in en herstelt die na stoppen. Na een onderbreking kan Bluetoothnaam herstellen nodig blijven. Dry-run verandert geen naam." to R.string.service_cap_name_behavior,
+        "Controlleracceptatie bewijst geen uitzending of ontvangst. De lokale RSSI wordt door de Linuxontvanger gemeten." to R.string.service_cap_evidence,
+        "aanwezig" to R.string.service_present,
+        "ontbreekt" to R.string.service_missing,
+        "ingeschakeld" to R.string.service_on,
+        "uitgeschakeld" to R.string.service_off,
+        "beschikbaar" to R.string.service_available,
+        "niet beschikbaar (of Bluetooth uit)" to R.string.service_unavailable_or_off,
+        "onbekend" to R.string.service_unknown,
+        "true" to R.string.service_true,
+        "false" to R.string.service_false,
+        "Bluetoothtoestemming ontbreekt; geef toestemming en probeer Bluetoothnaam herstellen opnieuw." to R.string.service_recovery_permission,
+        "Bluetoothadapter ontbreekt." to R.string.service_recovery_no_adapter,
+        "Bluetooth staat uit; schakel het in en probeer Bluetoothnaam herstellen opnieuw." to R.string.service_recovery_bluetooth_off,
+        "De huidige Bluetoothnaam kan niet worden gelezen." to R.string.service_name_unreadable,
+        "Het Bluetoothnaam-herstelbestand is te groot; het blijft bewaard." to R.string.service_recovery_too_large,
+        "Bluetoothnaam-herstelbestand kon niet duurzaam worden bevestigd." to R.string.service_recovery_not_durable,
+        "Bluetoothnaam-herstelbestand kon niet worden verwijderd." to R.string.service_recovery_not_removed,
+        "Onbekende versie van het Bluetoothnaam-herstelbestand." to R.string.service_recovery_unknown_version,
+        "Ongeldige eigenaar in Bluetoothnaam-herstelbestand." to R.string.service_recovery_invalid_owner,
+        "Ongeldige naam in Bluetoothnaam-herstelbestand; oorspronkelijke gegevens blijven bewaard." to R.string.service_recovery_invalid_name,
+        "Ongeldig Bluetoothnaam-herstelrecord" to R.string.service_recovery_invalid_record,
+        "Ongeldige namen in Bluetoothnaam-herstelrecord" to R.string.service_recovery_invalid_names,
+        "Bluetoothnaam wordt nog voorbereid of hersteld" to R.string.service_name_busy,
+        "Ongeldige tijdelijke Bluetoothnaam" to R.string.service_invalid_temporary_name,
+        "Proefidentiteit ontbreekt" to R.string.service_missing_run_id,
+        "Er staat nog Bluetoothnaamherstel open; herstel dit eerst via Telefoon" to R.string.service_restore_first,
+        "Oorspronkelijke Bluetoothnaam is ongeldig" to R.string.service_invalid_original_name,
+        "Android weigerde de tijdelijke Bluetoothnaam" to R.string.service_name_rejected,
+        "Bluetoothnaamherstel loopt al" to R.string.service_name_recovery_active,
+        "Bluetoothnaamvoorbereiding gestopt" to R.string.service_name_prepare_stopped,
+        "Bluetoothnaam is elders gewijzigd; uitzending niet gestart en herstelrecord behouden" to R.string.service_name_changed_before_start,
+        "Tijdelijke Bluetoothnaam niet bevestigd; herstelrecord blijft bewaard voor een mogelijk vertraagde wijziging" to R.string.service_name_prepare_unconfirmed,
+        "Bluetoothnaam is elders gewijzigd terwijl een naamverzoek onbevestigd is; huidige naam niet overschreven, herstelrecord behouden" to R.string.service_name_external_pending,
+        "Android weigerde Bluetoothnaamherstel; herstelrecord blijft bewaard" to R.string.service_name_restore_rejected,
+        "Bluetoothnaamherstel nog niet bevestigd; probeer herstel opnieuw via Telefoon" to R.string.service_name_restore_unconfirmed,
+    )
+
+    private val patterns: List<Rule> = listOf(
+        Rule(Regex("(.*)\\. Radio-stop nog niet bevestigd; zoeken en uitzenden blijven geblokkeerd tot de stopbevestiging\\. Zet Bluetooth uit en stop de app volledig via App-info als dit blijft duren; open daarna opnieuw\\.", RegexOption.DOT_MATCHES_ALL), R.string.service_stop_unconfirmed_suffix, setOf(1)),
+        Rule(Regex("(.*)\\. Bluetoothnaamherstel niet controleerbaar: (.*); herstelbestand blijft bewaard\\.", RegexOption.DOT_MATCHES_ALL), R.string.service_name_unverifiable, setOf(1, 2)),
+        Rule(Regex("(.*)\\. Naamlog kon niet worden opgeslagen: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_name_log_failed, setOf(1, 2)),
+        Rule(Regex("(.*)\\. Naamherstel hoort bij een andere proef; oorspronkelijke gegevens blijven bewaard\\.", RegexOption.DOT_MATCHES_ALL), R.string.service_other_run_recovery, setOf(1)),
+        Rule(Regex("(.*)\\. Bluetoothnaam herstellen…", RegexOption.DOT_MATCHES_ALL), R.string.service_restoring_suffix, setOf(1)),
+        Rule(Regex("(.*)\\. Naamherstel of logopslag niet afgerond: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_recovery_log_failed, setOf(1, 2)),
+        Rule(Regex("(.*)\\. Laatste logregel kon niet worden opgeslagen: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_last_log_failed, setOf(1, 2)),
+        Rule(Regex("(.*)\\. Eindstatus kon niet worden opgeslagen: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_final_state_failed, setOf(1, 2)),
+        Rule(Regex("(.*); radio-stop niet bevestigd", RegexOption.DOT_MATCHES_ALL), R.string.service_radio_stop_unconfirmed, setOf(1)),
+        Rule(Regex("(.*); opruimen mislukt: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_cleanup_failed_detail, setOf(1, 2)),
+        Rule(Regex("(.*); opruimen mislukt", RegexOption.DOT_MATCHES_ALL), R.string.service_cleanup_failed, setOf(1)),
+        Rule(Regex("Bluetoothnaamherstel staat open: tijdelijke naam (.*)\\. Oorspronkelijke naam: (.*)\\. Schakel Bluetooth in en kies Bluetoothnaam herstellen\\. Er wordt geen uitzending gestart\\.", RegexOption.DOT_MATCHES_ALL), R.string.service_name_recovery_pending, emptySet()),
+        Rule(Regex("Bluetoothnaam-herstelbestand kan niet worden gelezen: (.*)\\. Het bestand blijft bewaard; er wordt geen nieuwe naam ingesteld\\.", RegexOption.DOT_MATCHES_ALL), R.string.service_name_recovery_read_failed, setOf(1)),
+        Rule(Regex("Bluetoothnaam tijdelijk instellen op (.*); nog geen uitzending\\.", RegexOption.DOT_MATCHES_ALL), R.string.service_name_temporary, emptySet()),
+        Rule(Regex("Naamherstel kon niet starten: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_name_restore_start_failed, setOf(1)),
+        Rule(Regex("BLE-voorgrondservice kon niet starten: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_foreground_failed, setOf(1)),
+        Rule(Regex("Startaanvraag mislukt: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_start_request_failed, setOf(1)),
+        Rule(Regex("Bluetoothnaam voorbereiden mislukt: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_name_prepare_failed, setOf(1)),
+        Rule(Regex("Start mislukt: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_start_failed, setOf(1)),
+        Rule(Regex("Scenario starten mislukt: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_scenario_start_failed, setOf(1)),
+        Rule(Regex("Naamherstel aanvragen mislukt: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_name_request_failed, setOf(1)),
+        Rule(Regex("Bluetoothnaamherstel niet afgerond: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_name_restore_failed, setOf(1)),
+        Rule(Regex("Bluetoothcontrole: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_bluetooth_check, setOf(1)),
+        Rule(Regex("Geplande stilte: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_planned_silence, setOf(1)),
+        Rule(Regex("Tijdslot (\\d+) · (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_time_slot, emptySet()),
+        Rule(Regex("Timeout: (.*)\\. Radio wordt opgeruimd; werkelijke uitzending onbekend\\.", RegexOption.DOT_MATCHES_ALL), R.string.service_operation_timeout, setOf(1)),
+        Rule(Regex("Payload instellen mislukt: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_payload_failed, setOf(1)),
+        Rule(Regex("Radio uitschakelen mislukt: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_silence_failed, setOf(1)),
+        Rule(Regex("Payload instellen: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_payload_error, setOf(1)),
+        Rule(Regex("Radio uitschakelen: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_silence_error, setOf(1)),
+        Rule(Regex("Afronden: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_finishing, setOf(1)),
+        Rule(Regex("Logopslag mislukt: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_log_failed, setOf(1)),
+        Rule(Regex("Controllerstatus (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_controller_status, emptySet()),
+        Rule(Regex("Toestel: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_cap_device, emptySet()),
+        Rule(Regex("BLE-functie: (aanwezig|ontbreekt)", RegexOption.DOT_MATCHES_ALL), R.string.service_cap_ble, setOf(1)),
+        Rule(Regex("Bluetooth: (ingeschakeld|uitgeschakeld)", RegexOption.DOT_MATCHES_ALL), R.string.service_cap_bluetooth, setOf(1)),
+        Rule(Regex("Huidige Bluetoothnaam: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_cap_name, emptySet()),
+        Rule(Regex("Advertiser: (beschikbaar|niet beschikbaar \\(of Bluetooth uit\\))", RegexOption.DOT_MATCHES_ALL), R.string.service_cap_advertiser, setOf(1)),
+        Rule(Regex("Meerdere advertenties ondersteund: (true|false)", RegexOption.DOT_MATCHES_ALL), R.string.service_cap_multiple, setOf(1)),
+        Rule(Regex("Extended advertising: (true|false)", RegexOption.DOT_MATCHES_ALL), R.string.service_cap_extended, setOf(1)),
+        Rule(Regex("LE Coded PHY: (true|false)", RegexOption.DOT_MATCHES_ALL), R.string.service_cap_coded, setOf(1)),
+        Rule(Regex("Maximum advertising-data: (\\d+) bytes", RegexOption.DOT_MATCHES_ALL), R.string.service_cap_maximum, emptySet()),
+        Rule(Regex("Controle niet voltooid: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_cap_failed, setOf(1)),
+        Rule(Regex("Archiefherstel niet volledig: (.*)\\. Oorspronkelijke bestanden blijven bewaard\\.", RegexOption.DOT_MATCHES_ALL), R.string.service_archive_recovery_failed, setOf(1)),
+        Rule(Regex("Opnameherstel niet volledig: (.*)\\. Oorspronkelijke metingen blijven bewaard\\.", RegexOption.DOT_MATCHES_ALL), R.string.service_capture_recovery_failed, setOf(1)),
+        Rule(Regex("Profiel (.*) kon niet worden geladen: (.*)", RegexOption.DOT_MATCHES_ALL), R.string.service_profile_load_failed, setOf(2)),
+    )
+}

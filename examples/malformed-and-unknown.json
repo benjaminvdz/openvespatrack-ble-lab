@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "malformed-and-unknown",
+  "name": "07 · Invalid and unknown payloads",
+  "description": "Cycles through empty, truncated, status and unknown FC65 payloads. BLE carries intentionally incomplete or unknown application data.",
+  "durationMs": 20000,
+  "slotMs": 1000,
+  "tracks": [
+    {
+      "id": "raw-cases",
+      "kind": "RAW",
+      "rawFrames": [
+        "",
+        "00",
+        "0001",
+        "003412",
+        "02",
+        "03",
+        "f03412010000",
+        "013412"
+      ]
+    }
+  ]
+}

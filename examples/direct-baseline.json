@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "direct-baseline",
+  "name": "01 · Direct tag — baseline",
+  "description": "One synthetic FC65 tag with short ID 4660 and an incrementing three-byte field. Local RSSI is measured by the receiving device.",
+  "tracks": [
+    {
+      "id": "tag-a"
+    }
+  ]
+}

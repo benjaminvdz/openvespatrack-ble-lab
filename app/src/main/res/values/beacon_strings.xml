@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="beacon_project">ANTHROBIOS NEXUS · OPENVESPATRACK</string>
+    <string name="beacon_title">Test beacon</string>
+    <string name="beacon_intro">Turn this phone into a fixed test point for a second BLE receiver. The beacon has no automatic time limit: stop it here or from its notification.</string>
+    <string name="beacon_back">Back to workspace</string>
+    <string name="beacon_status_label">BEACON SESSION</string>
+    <string name="beacon_start">Start beacon</string>
+    <string name="beacon_stop">Stop</string>
+    <string name="beacon_ready">Ready to start</string>
+    <string name="beacon_starting">Starting beacon…</string>
+    <string name="beacon_active">Active · controller accepted</string>
+    <string name="beacon_stopping">Stopping · awaiting confirmation…</string>
+    <string name="beacon_stopped">Stopped · radio cleanup confirmed</string>
+    <string name="beacon_stop_unconfirmed">Stop is not confirmed. Try Stop again or turn Bluetooth off. The radio remains reserved until cleanup is confirmed.</string>
+    <string name="beacon_identity_loading">Loading test identity…</string>
+    <string name="beacon_identity_label">Synthetic beacon ID</string>
+    <string name="beacon_copy_identity">Copy test ID</string>
+    <string name="beacon_copied">Test ID copied</string>
+    <string name="beacon_elapsed">Controller active for %1$s</string>
+    <string name="beacon_no_session">No active controller session</string>
+    <string name="beacon_receiver_title">Find the test point</string>
+    <string name="beacon_receiver_steps">1. Enable Bluetooth and tap Start beacon.\n2. On a second device, scan all BLE advertisements and inspect service data.\n3. Match the service UUID and test ID below, then follow the RSSI measured by that receiver.\n4. Tap Stop when finished.\n\nThis custom test format requires an all-BLE view or a compatible decoder. Nano and FC65 filters alone will not identify it.</string>
+    <string name="beacon_details">Service UUID\n%1$s\n\nService data (hex)\n%2$s\n\nVersion 01 + 8 identity bytes. Legacy 1M; requested interval 200 ms; requested power −7 dBm. No device name, manufacturer data or GATT service.</string>
+    <string name="beacon_limits_title">What the status means</string>
+    <string name="beacon_limits">Controller acceptance confirms the Android request, not independent radio reception. Use a second receiver to verify the signal. RSSI does not prove distance or direction.\n\nThe foreground session can continue with the screen off. Android, device battery restrictions, permission changes, Bluetooth being turned off, force-stop or reboot can interrupt it. After an interruption, start again explicitly.\n\nThe test ID is random and stored locally for this app installation. It is public over the air, not an authentication token or the phone Bluetooth address. Clearing app data creates a new ID. This mode does not change the phone Bluetooth name.</string>
+    <string name="beacon_notification_denied">Notifications are off. The beacon can run, but the notification Stop action may be hidden. Keep this screen available, or enable notifications in Android settings.</string>
+    <string name="beacon_channel">OpenVespaTrack test beacon</string>
+    <string name="beacon_channel_description">Continuous beacon status with an explicit Stop action</string>
+    <string name="beacon_notification_title">OpenVespaTrack · test beacon</string>
+    <string name="beacon_error_permission">Stopped: Bluetooth advertising permission is missing. Grant Nearby devices permission before trying again.</string>
+    <string name="beacon_error_bluetooth">Stopped: Bluetooth is off or unavailable. Turn it on, then start again.</string>
+    <string name="beacon_error_unsupported">Stopped: this device does not support the required BLE advertising mode.</string>
+    <string name="beacon_error_busy">The radio is in use by a capture or simulation. Stop that session first.</string>
+    <string name="beacon_error_timeout">Stopped: Android did not confirm beacon startup in time.</string>
+    <string name="beacon_error_storage">The local beacon state could not be safely loaded or saved. No new beacon was started.</string>
+    <string name="beacon_error_storage_cleanup">Radio cleanup is confirmed, but the saved session status could not be cleared. Reopening the app may report an interruption.</string>
+    <string name="beacon_error_foreground">Android could not start the visible beacon service. Check Bluetooth permissions, then start again from this screen.</string>
+    <string name="beacon_error_interrupted">The beacon was interrupted before a confirmed stop. Check Bluetooth and start again explicitly.</string>
+    <string name="beacon_error_controller">Stopped: the Bluetooth controller rejected or interrupted the request. Check Bluetooth and try again.</string>
+</resources>

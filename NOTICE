@@ -1,0 +1,22 @@
+OpenVespaTrack BLE Lab
+Copyright (c) 2026 Benjamin van der Zalm
+
+An OpenVespaTrack component by AnthroBios Nexus.
+Project: https://www.anthrobiosnexus.com/projects/openvespatrack/
+Application license: MIT; see LICENSE.
+
+IBM Plex Mono and IBM Plex Sans
+Copyright IBM Corp.; Reserved Font Name "Plex".
+SIL Open Font License, Version 1.1.
+Keep the bundled IBM Plex OFL notices with redistributed font files.
+
+Kotlin standard library and kotlinx.serialization
+Copyright their respective contributors.
+Apache License, Version 2.0.
+
+Build and test dependencies retain their upstream licenses. They are not
+relicensed under MIT by this application.
+
+Technical advertisement identifiers and compatibility markers are retained
+for interoperability. This independent project does not claim affiliation
+with or endorsement by manufacturers of existing tags.

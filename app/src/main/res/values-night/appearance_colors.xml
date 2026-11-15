@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <color name="anb_page">#191919</color>
+  <color name="anb_surface">#222222</color>
+  <color name="anb_paper">#1d1d1d</color>
+  <color name="anb_subtle">#2c2c2c</color>
+  <color name="anb_hover">#2f2f2f</color>
+  <color name="anb_selected">#383838</color>
+  <color name="anb_text">#c2c2b0</color>
+  <color name="anb_muted">#a5a598</color>
+  <color name="anb_accent">#c9a554</color>
+  <color name="anb_accent_hover">#dcc07c</color>
+  <color name="anb_on_accent">#191919</color>
+  <color name="anb_accent_subtle">#322a19</color>
+  <color name="anb_accent_text">#dcc07c</color>
+  <color name="anb_border">#6e6e66</color>
+  <color name="anb_rule">#383838</color>
+  <color name="anb_chrome">#161616</color>
+  <color name="anb_success">#8fbf8f</color>
+  <color name="anb_success_bg">#1f2b20</color>
+  <color name="anb_warning">#e7ac75</color>
+  <color name="anb_warning_bg">#302818</color>
+  <color name="anb_danger">#e5aa97</color>
+  <color name="anb_danger_bg">#332018</color>
+  <color name="anb_focus">#dcc07c</color>
+</resources>

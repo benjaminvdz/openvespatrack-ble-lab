@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "boundary-five-six",
+  "name": "05 · Field boundary: byte 5 to 6",
+  "description": "A 24-bit field crosses from 0x05FFFF to 0x060000. The experimental decoder changes its candidate interpretation here; temperature remains unconfirmed.",
+  "durationMs": 10000,
+  "slotMs": 1000,
+  "tracks": [
+    {
+      "id": "boundary-tag",
+      "counterStart": 393214
+    }
+  ]
+}

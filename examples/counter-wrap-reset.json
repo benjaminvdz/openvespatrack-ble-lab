@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "counter-wrap-reset",
+  "name": "04 · Counter wrap and reset",
+  "description": "Two alternating tracks: a 24-bit wrap and a 16-bit wrap with reset after 20 attempts. A counter gap alone does not establish radio loss.",
+  "durationMs": 30000,
+  "tracks": [
+    {
+      "id": "wrap24",
+      "shortId": 4660,
+      "counterStart": 16777212
+    },
+    {
+      "id": "wrap16-reset",
+      "shortId": 4661,
+      "counterStart": 65532,
+      "counterMode": "COUNTER16_TEMPERATURE",
+      "counterResetEvery": 20
+    }
+  ]
+}

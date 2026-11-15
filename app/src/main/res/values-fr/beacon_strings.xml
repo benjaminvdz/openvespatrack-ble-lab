@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="beacon_project">ANTHROBIOS NEXUS · OPENVESPATRACK</string>
+    <string name="beacon_title">Balise de test</string>
+    <string name="beacon_intro">Utilisez ce téléphone comme point de test fixe pour un second récepteur BLE. La balise ne possède aucune limite de durée automatique : arrêtez-la ici ou depuis sa notification.</string>
+    <string name="beacon_back">Retour à l\'espace de travail</string>
+    <string name="beacon_status_label">SESSION DE BALISE</string>
+    <string name="beacon_start">Démarrer la balise</string>
+    <string name="beacon_stop">Arrêter</string>
+    <string name="beacon_ready">Prête à démarrer</string>
+    <string name="beacon_starting">Démarrage de la balise…</string>
+    <string name="beacon_active">Active · acceptée par le contrôleur</string>
+    <string name="beacon_stopping">Arrêt · confirmation en attente…</string>
+    <string name="beacon_stopped">Arrêtée · libération radio confirmée</string>
+    <string name="beacon_stop_unconfirmed">L\'arrêt n\'est pas confirmé. Réessayez Arrêter ou désactivez le Bluetooth. La radio reste réservée jusqu\'à confirmation de sa libération.</string>
+    <string name="beacon_identity_loading">Chargement de l\'identité de test…</string>
+    <string name="beacon_identity_label">Identifiant synthétique de balise</string>
+    <string name="beacon_copy_identity">Copier l\'identifiant de test</string>
+    <string name="beacon_copied">Identifiant de test copié</string>
+    <string name="beacon_elapsed">Contrôleur actif depuis %1$s</string>
+    <string name="beacon_no_session">Aucune session de contrôleur active</string>
+    <string name="beacon_receiver_title">Trouver le point de test</string>
+    <string name="beacon_receiver_steps">1. Activez le Bluetooth et appuyez sur Démarrer la balise.\n2. Sur un second appareil, recherchez toutes les annonces BLE et inspectez les données de service.\n3. Comparez l\'UUID de service et l\'identifiant de test ci-dessous, puis suivez le RSSI mesuré par ce récepteur.\n4. Appuyez sur Arrêter lorsque vous avez terminé.\n\nCe format de test nécessite une vue de toutes les annonces BLE ou un décodeur adapté. Les filtres Nano et FC65 seuls ne l\'identifient pas.</string>
+    <string name="beacon_details">UUID de service\n%1$s\n\nDonnées de service (hex)\n%2$s\n\nVersion 01 + 8 octets d\'identité. Legacy 1M ; intervalle demandé de 200 ms ; puissance demandée de −7 dBm. Aucun nom d\'appareil, aucune donnée fabricant ni service GATT.</string>
+    <string name="beacon_limits_title">Signification du statut</string>
+    <string name="beacon_limits">L\'acceptation du contrôleur confirme la demande Android, pas une réception radio indépendante. Vérifiez le signal avec un second récepteur. Le RSSI ne prouve ni distance ni direction.\n\nLa session au premier plan peut continuer lorsque l\'écran est éteint. Android, les restrictions de batterie, les changements d\'autorisations, la désactivation du Bluetooth, un arrêt forcé ou un redémarrage peuvent l\'interrompre. Après une interruption, redémarrez explicitement la balise.\n\nL\'identifiant de test est aléatoire et enregistré localement pour cette installation. Il est public dans le signal radio : ce n\'est ni une clé d\'authentification ni l\'adresse Bluetooth du téléphone. Effacer les données de l\'application crée un nouvel identifiant. Ce mode ne modifie pas le nom Bluetooth du téléphone.</string>
+    <string name="beacon_notification_denied">Les notifications sont désactivées. La balise peut fonctionner, mais le bouton Arrêter de la notification peut être masqué. Gardez cet écran accessible ou activez les notifications dans les paramètres Android.</string>
+    <string name="beacon_channel">Balise de test OpenVespaTrack</string>
+    <string name="beacon_channel_description">État de la balise continue avec une action Arrêter</string>
+    <string name="beacon_notification_title">OpenVespaTrack · balise de test</string>
+    <string name="beacon_error_permission">Arrêtée : autorisation de diffusion BLE manquante. Autorisez les appareils à proximité avant de réessayer.</string>
+    <string name="beacon_error_bluetooth">Arrêtée : le Bluetooth est désactivé ou indisponible. Activez-le, puis redémarrez.</string>
+    <string name="beacon_error_unsupported">Arrêtée : cet appareil ne prend pas en charge le mode de diffusion BLE requis.</string>
+    <string name="beacon_error_busy">La radio est utilisée par une capture ou une simulation. Arrêtez d\'abord cette session.</string>
+    <string name="beacon_error_timeout">Arrêtée : Android n\'a pas confirmé le démarrage de la balise à temps.</string>
+    <string name="beacon_error_storage">L\'état local de la balise n\'a pas pu être chargé ou enregistré correctement. Aucune nouvelle balise n\'a démarré.</string>
+    <string name="beacon_error_storage_cleanup">La libération radio est confirmée, mais l\'état enregistré de la session n\'a pas pu être effacé. Une interruption peut être signalée à la réouverture.</string>
+    <string name="beacon_error_foreground">Android n\'a pas pu démarrer le service visible de la balise. Vérifiez les autorisations Bluetooth, puis redémarrez depuis cet écran.</string>
+    <string name="beacon_error_interrupted">La balise a été interrompue avant confirmation de son arrêt. Vérifiez le Bluetooth et redémarrez explicitement.</string>
+    <string name="beacon_error_controller">Arrêtée : le contrôleur Bluetooth a refusé ou interrompu la demande. Vérifiez le Bluetooth et réessayez.</string>
+</resources>

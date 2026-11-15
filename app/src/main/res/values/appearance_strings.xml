@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OpenVespaTrack BLE Lab</string>
+    <string name="appearance_title">Appearance &amp; about</string>
+    <string name="appearance_back">Back</string>
+    <string name="appearance_intro">Choose a comfortable display and interface language. These settings do not start or stop Bluetooth.</string>
+    <string name="appearance_theme">Theme</string>
+    <string name="appearance_theme_system">Follow device theme</string>
+    <string name="appearance_theme_light">Light</string>
+    <string name="appearance_theme_dark">Dark</string>
+    <string name="appearance_language">Language</string>
+    <string name="appearance_language_system">Follow device language</string>
+    <string name="appearance_language_english">English</string>
+    <string name="appearance_language_dutch">Nederlands</string>
+    <string name="appearance_language_french">Français</string>
+    <string name="appearance_apply">Apply settings</string>
+    <string name="appearance_saved">Appearance and language saved.</string>
+    <string name="appearance_about">About OpenVespaTrack BLE Lab</string>
+    <string name="appearance_about_body">Capture Bluetooth Low Energy advertisements, inspect saved observations and use this phone as a test beacon. This application is part of OpenVespaTrack, an AnthroBios Nexus project working towards affordable, open-source tracking.</string>
+    <string name="appearance_version">Version %1$s · build %2$s</string>
+    <string name="appearance_project_link">OpenVespaTrack project</string>
+    <string name="appearance_desktop_link">BLE Tagfinder desktop app</string>
+    <string name="appearance_links_external">Project links open in your browser.</string>
+    <string name="appearance_open_link_failed">No browser is available to open this link.</string>
+    <string name="appearance_licenses">Open-source licenses</string>
+    <string name="appearance_licenses_body">Application: MIT License, © 2026 Benjamin van der Zalm. IBM Plex fonts: SIL Open Font License 1.1, © IBM Corp. License texts are included in this app.</string>
+    <string name="appearance_license_mit">Read application license</string>
+    <string name="appearance_license_fonts">Read IBM Plex font licenses</string>
+    <string name="appearance_license_title_mit">MIT License</string>
+    <string name="appearance_license_title_fonts">IBM Plex font licenses</string>
+    <string name="appearance_license_loading">Opening license…</string>
+    <string name="appearance_license_unavailable">The license text could not be opened.</string>
+    <string name="appearance_close">Close</string>
+</resources>
+

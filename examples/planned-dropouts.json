@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "planned-dropouts",
+  "name": "03 · Pauses and omissions",
+  "description": "Two explicit radio pauses and 15% deterministic omissions. This percentage is a scenario setting, not measured packet loss.",
+  "seed": 76543,
+  "tracks": [
+    {
+      "id": "tag-a"
+    }
+  ],
+  "pauses": [
+    {
+      "fromMs": 10000,
+      "untilMs": 15000
+    },
+    {
+      "fromMs": 30000,
+      "untilMs": 40000
+    }
+  ],
+  "lossPercent": 15
+}

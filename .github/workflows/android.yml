@@ -1,0 +1,110 @@
+name: Android validation
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - uses: gradle/actions/setup-gradle@v4
+      - name: SDK
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - name: Unit tests, lint and APKs
+        env:
+          VESPA_GIT_COMMIT: ${{ github.sha }}
+        run: ./gradlew --no-daemon :core:test :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:assembleRelease
+      - name: Verify translations and public source
+        run: |
+          python3 scripts/check_locales.py
+          python3 scripts/publication_audit.py
+          python3 -m unittest discover -s scripts -p 'test_publication_audit.py'
+      - name: Package verified preview and clean source
+        env:
+          VESPA_GIT_COMMIT: ${{ github.sha }}
+        run: python3 scripts/package_preview.py
+      - name: Archive installable preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: openvespatrack-ble-lab-preview
+          path: dist/
+          if-no-files-found: error
+      - name: Archive test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openvespatrack-ble-lab-test-reports
+          path: |
+            app/build/reports/
+            core/build/reports/
+          if-no-files-found: warn
+  device-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      VESPA_GIT_COMMIT: ${{ github.sha }}
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [26, 35]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Make room for legacy emulator userdata
+        # API 26's system image still needs about 7.2 GiB even with disk-size set.
+        # This Kotlin-only project does not use the hosted runner's preinstalled NDK/CMake.
+        shell: bash
+        run: |
+          vespa_sdk_dir="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
+          test -n "$vespa_sdk_dir" && test -d "$vespa_sdk_dir/platform-tools"
+          df -h .
+          sudo rm -rf -- "$vespa_sdk_dir/ndk" "$vespa_sdk_dir/cmake"
+          df -h .
+      - name: Install compile SDK independently of emulator API
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - name: Build application and instrumentation APKs
+        run: ./gradlew --no-daemon :app:assembleDebug :app:assembleDebugAndroidTest
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Hardwareless Android UI and service tests
+        timeout-minutes: 20
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api }}
+          target: default
+          arch: x86_64
+          profile: Nexus 6
+          # Requested size; older system images can enforce a larger minimum.
+          disk-size: 2048M
+          disable-animations: true
+          emulator-boot-timeout: 600
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-save
+          script: sh scripts/android_device_checks.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-device-tests-api-${{ matrix.api }}
+          path: |
+            app/build/reports/androidTests/
+            app/build/reports/screenshots/
+            app/build/outputs/androidTest-results/
+          if-no-files-found: warn
+

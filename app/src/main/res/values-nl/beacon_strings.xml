@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="beacon_project">ANTHROBIOS NEXUS · OPENVESPATRACK</string>
+    <string name="beacon_title">Testbaken</string>
+    <string name="beacon_intro">Gebruik deze telefoon als vast testpunt voor een tweede BLE-ontvanger. Het baken heeft geen automatische tijdslimiet: stop het hier of via de melding.</string>
+    <string name="beacon_back">Terug naar werkruimte</string>
+    <string name="beacon_status_label">BAKENSESSIE</string>
+    <string name="beacon_start">Start baken</string>
+    <string name="beacon_stop">Stop</string>
+    <string name="beacon_ready">Gereed om te starten</string>
+    <string name="beacon_starting">Baken starten…</string>
+    <string name="beacon_active">Actief · controller geaccepteerd</string>
+    <string name="beacon_stopping">Stoppen · wachten op bevestiging…</string>
+    <string name="beacon_stopped">Gestopt · radio-opruiming bevestigd</string>
+    <string name="beacon_stop_unconfirmed">Stoppen is niet bevestigd. Probeer Stop opnieuw of zet Bluetooth uit. De radio blijft bezet totdat opruiming is bevestigd.</string>
+    <string name="beacon_identity_loading">Testidentiteit laden…</string>
+    <string name="beacon_identity_label">Synthetisch baken-ID</string>
+    <string name="beacon_copy_identity">Test-ID kopiëren</string>
+    <string name="beacon_copied">Test-ID gekopieerd</string>
+    <string name="beacon_elapsed">Controller actief sinds %1$s</string>
+    <string name="beacon_no_session">Geen actieve controllersessie</string>
+    <string name="beacon_receiver_title">Vind het testpunt</string>
+    <string name="beacon_receiver_steps">1. Zet Bluetooth aan en druk op Start baken.\n2. Zoek op een tweede toestel naar alle BLE-advertenties en bekijk de servicedata.\n3. Vergelijk de service-UUID en het test-ID hieronder en volg de RSSI die die ontvanger meet.\n4. Druk op Stop wanneer je klaar bent.\n\nDit eigen testformaat vereist een weergave van alle BLE-signalen of een passende decoder. Alleen Nano- en FC65-filters herkennen het niet.</string>
+    <string name="beacon_details">Service-UUID\n%1$s\n\nServicedata (hex)\n%2$s\n\nVersie 01 + 8 identiteitsbytes. Legacy 1M; gevraagd interval 200 ms; gevraagd vermogen −7 dBm. Geen toestelnaam, manufacturerdata of GATT-service.</string>
+    <string name="beacon_limits_title">Wat de status betekent</string>
+    <string name="beacon_limits">Controlleracceptatie bevestigt de Android-aanvraag, geen onafhankelijke radio-ontvangst. Controleer het signaal met een tweede ontvanger. RSSI bewijst geen afstand of richting.\n\nDe foreground-sessie kan doorgaan met het scherm uit. Android, batterijbeperkingen, gewijzigde rechten, Bluetooth uitschakelen, geforceerd stoppen of herstarten kunnen de sessie onderbreken. Start na een onderbreking opnieuw met de knop.\n\nHet test-ID is willekeurig en lokaal opgeslagen voor deze appinstallatie. Het is openbaar in het radiosignaal, geen authenticatiesleutel of Bluetoothadres van de telefoon. Appgegevens wissen maakt een nieuw ID. Deze modus verandert de Bluetoothnaam van de telefoon niet.</string>
+    <string name="beacon_notification_denied">Meldingen staan uit. Het baken kan werken, maar de Stop-knop in de melding kan verborgen zijn. Houd dit scherm beschikbaar of zet meldingen aan in de Android-instellingen.</string>
+    <string name="beacon_channel">OpenVespaTrack-testbaken</string>
+    <string name="beacon_channel_description">Status van het doorlopende baken met een Stop-knop</string>
+    <string name="beacon_notification_title">OpenVespaTrack · testbaken</string>
+    <string name="beacon_error_permission">Gestopt: toestemming voor BLE-uitzenden ontbreekt. Verleen toestemming voor apparaten in de buurt en probeer opnieuw.</string>
+    <string name="beacon_error_bluetooth">Gestopt: Bluetooth staat uit of is niet beschikbaar. Zet het aan en start opnieuw.</string>
+    <string name="beacon_error_unsupported">Gestopt: dit toestel ondersteunt de vereiste BLE-advertentiemodus niet.</string>
+    <string name="beacon_error_busy">De radio wordt gebruikt voor een opname of simulatie. Stop die sessie eerst.</string>
+    <string name="beacon_error_timeout">Gestopt: Android heeft de bakenstart niet op tijd bevestigd.</string>
+    <string name="beacon_error_storage">De lokale bakenstatus kon niet veilig worden geladen of opgeslagen. Er is geen nieuw baken gestart.</string>
+    <string name="beacon_error_storage_cleanup">Radio-opruiming is bevestigd, maar de opgeslagen sessiestatus kon niet worden gewist. Bij heropening kan een onderbreking worden gemeld.</string>
+    <string name="beacon_error_foreground">Android kon de zichtbare bakenservice niet starten. Controleer de Bluetoothrechten en start opnieuw vanuit dit scherm.</string>
+    <string name="beacon_error_interrupted">Het baken is onderbroken voordat stoppen was bevestigd. Controleer Bluetooth en start opnieuw met de knop.</string>
+    <string name="beacon_error_controller">Gestopt: de Bluetoothcontroller heeft de aanvraag geweigerd of onderbroken. Controleer Bluetooth en probeer opnieuw.</string>
+</resources>

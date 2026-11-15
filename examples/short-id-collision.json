@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "short-id-collision",
+  "name": "06 · Two tracks sharing a short ID",
+  "description": "Both virtual tracks use ID 4660 with different counter sequences. They share one phone radio and are not independent physical Bluetooth transmitters.",
+  "tracks": [
+    {
+      "id": "logical-a",
+      "counterStart": 1
+    },
+    {
+      "id": "logical-b",
+      "counterStart": 50001
+    }
+  ]
+}

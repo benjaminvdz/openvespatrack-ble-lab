@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "nano-name-recognition",
+  "name": "10 · Name prefix — recognition",
+  "description": "Advertises only the synthetic name VESPA-NANO-SIM, without manufacturer data, service UUIDs or telemetry. The guarded name workflow temporarily changes the phone Bluetooth name and restores it after stopping. Hardware compatibility is unverified.",
+  "radio": {
+    "localName": "VESPA-NANO-SIM"
+  },
+  "tracks": [
+    {
+      "id": "nano-name-probe",
+      "kind": "NAME_ONLY"
+    }
+  ]
+}

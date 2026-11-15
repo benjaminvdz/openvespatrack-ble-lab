@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "nano-direct-vn",
+  "name": "11 · Name-encoded tag — identity",
+  "description": "Synthetic name vn0CqrvM3e7/ encodes logical identity AA:BB:CC:DD:EE:FF and parameter 0C, whose hardware meaning is unknown. Local Name only, without manufacturer data or GATT. The receiver measures RSSI. The phone name is temporarily changed and restored; its radio address is not selected.",
+  "radio": {
+    "localName": "vn0CqrvM3e7/"
+  },
+  "tracks": [
+    {
+      "id": "nano-direct",
+      "kind": "NAME_ONLY"
+    }
+  ]
+}
